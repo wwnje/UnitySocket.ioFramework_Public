@@ -9,8 +9,8 @@ using BestHTTP.Examples;
 
 public sealed class MySocketIOSample : MonoBehaviour
 {
-    string url = "https://socket-io-chat.now.sh/socket.io/";
-    //string url = "http://localhost:3000/socket.io/";
+    //const string url = "https://socket-io-chat.now.sh/socket.io/";
+    const string url = "http://localhost:3000/socket.io/";
 
     private readonly TimeSpan TYPING_TIMER_LENGTH = TimeSpan.FromMilliseconds(700);
 

@@ -3,6 +3,8 @@
 # =============== #
 Temp/
 Assets/Best HTTP
+Assets/Plugins
+
 Library/*
 
 # ===================================== #
