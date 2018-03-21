@@ -1,5 +1,4 @@
 ﻿#if !BESTHTTP_DISABLE_SOCKETIO
-
 using System;
 using System.Collections.Generic;
 
@@ -7,10 +6,9 @@ using UnityEngine;
 using BestHTTP.SocketIO;
 using BestHTTP.Examples;
 
-public sealed class MySocketIOSample : MonoBehaviour
+public class NetWorkSample : MonoBehaviour
 {
-    //const string url = "https://socket-io-chat.now.sh/socket.io/";
-    const string url = "http://localhost:3000/socket.io/";
+    const string url = "https://socket-io-chat.now.sh/socket.io/";
 
     private readonly TimeSpan TYPING_TIMER_LENGTH = TimeSpan.FromMilliseconds(700);
 
@@ -73,7 +71,8 @@ public sealed class MySocketIOSample : MonoBehaviour
 
     void Start()
     {
-        GUIHelper.ClientArea = new Rect(0, SampleSelector.statisticsHeight + 5, Screen.width, Screen.height - SampleSelector.statisticsHeight - 50);
+        GUIHelper.ClientArea =
+            new Rect(0, SampleSelector.statisticsHeight + 5, Screen.width, Screen.height - SampleSelector.statisticsHeight - 50);
 
         // The current state is Login
         State = ChatStates.Login;
