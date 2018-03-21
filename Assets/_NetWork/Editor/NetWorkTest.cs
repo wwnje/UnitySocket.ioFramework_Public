@@ -31,7 +31,7 @@ public class NetWorkTest : ZenjectUnitTestFixture
     [Test]
     public void Run_Test()
     {
-        network_conn.Connect("", 1);
+        network_conn.Connect("");
 
         byte[] data = network.Receive();
         Assert.AreEqual(null, data);

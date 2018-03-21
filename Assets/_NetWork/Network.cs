@@ -11,7 +11,7 @@ public class Network : INetwork, INetworkConnection
         connectionFactory = factory;
     }
 
-    public void Connect(string host, int port)
+    public void Connect(string url)
     {
         if (conn != null)
         {
@@ -22,15 +22,16 @@ public class Network : INetwork, INetworkConnection
         conn = connectionFactory.Create();
         conn.ComingData().Subscribe(OnData, OnDataException);
 
-        conn.Connect(host, port).Subscribe(_ =>
-        {
-            Debug.Log("Conn Suc");
-        }, error =>
-        {
-            Debug.Log("Conn error" + error);
-            DisConnect();
-        }
-        );
+        //conn.Connect(url).Subscribe(_ =>
+        //{
+        //    Debug.Log("Conn Suc");
+        //}, error =>
+        //{
+        //    Debug.Log("Conn error" + error);
+        //    DisConnect();
+        //}
+        //);
+        conn.Connect_2(url);
     }
 
     public void DisConnect()
@@ -63,8 +64,13 @@ public class Network : INetwork, INetworkConnection
         return null;
     }
 
-    public void Send<T>(T pack) where T : IPacket
+    public void Send(string eventName, string msg)
     {
-        throw new System.NotImplementedException();
+        conn.Send(eventName, msg);
+    }
+
+    public void Bind(string eventName, BestHTTP.SocketIO.Events.SocketIOCallback callback)
+    {
+        conn.Bind(eventName, callback);
     }
 }

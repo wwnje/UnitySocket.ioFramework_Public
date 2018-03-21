@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 public interface INetworkConnection
 {
-    void Connect(string host, int port);
+    void Connect(string url);
     void DisConnect();
 }
