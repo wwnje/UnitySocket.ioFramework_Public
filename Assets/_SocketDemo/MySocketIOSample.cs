@@ -80,8 +80,10 @@ public sealed class MySocketIOSample : MonoBehaviour
         State = ChatStates.Login;
 
         // Change an option to show how it should be done
-        SocketOptions options = new SocketOptions();
-        options.AutoConnect = false;
+        SocketOptions options = new SocketOptions
+        {
+            AutoConnect = false
+        };
 
         // Create the Socket.IO manager
         Manager = new SocketManager(new Uri(url), options);

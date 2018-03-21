@@ -1,7 +1,14 @@
-﻿using UniRx;
+﻿using BestHTTP.SocketIO;
+using System;
+using System.Collections.Generic;
+using UniRx;
+using UnityEngine;
 
 public class TCPConnection : ITCPConnection
 {
+    SocketManager Manager;
+    Subject<byte[]> subject;
+
     public void Close()
     {
         throw new System.NotImplementedException();
@@ -9,7 +16,7 @@ public class TCPConnection : ITCPConnection
 
     public IObservable<byte[]> ComingData()
     {
-        return null;
+        return subject ?? new Subject<byte[]>();
     }
 
     public bool IsConnected()
@@ -22,8 +29,14 @@ public class TCPConnection : ITCPConnection
         throw new System.NotImplementedException();
     }
 
-    IObservable<Unit> ITCPConnection.Connect(string host, int port)
+    public IObservable<Unit> Connect(string host, int port)
     {
+        // client not null
         return null;
+    }
+
+    public void Connect_2(string host, int port)
+    {
+       
     }
 }

@@ -7,4 +7,6 @@ public interface ITCPConnection
     void Close();
     IObservable<byte[]> ComingData();
     void Send(byte[] data);
+
+    void Connect_2(string host, int port);
 }
