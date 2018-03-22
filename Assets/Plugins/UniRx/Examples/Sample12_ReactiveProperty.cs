@@ -50,6 +50,7 @@ namespace UniRx.Examples
             enemy.IsDead.Where(isDead => isDead == true)
                 .Subscribe(_ =>
                 {
+                    Debug.LogError("IsDead");
                     MyToggle.interactable = MyButton.interactable = false;
                 });
 
@@ -69,7 +70,7 @@ namespace UniRx.Examples
         {
             // Declarative Property
             CurrentHp = new ReactiveProperty<long>(initialHp);
-            IsDead = CurrentHp.Select(x => x <= 0).ToReactiveProperty();
+            IsDead = CurrentHp.Select(x => x <= 10).ToReactiveProperty();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using BestHTTP.SocketIO.Events;
 using UniRx;
 
-public interface ITCPConnection
+public interface ISocketIOConnection
 {
     bool IsConnected();
     IObservable<Unit> Connect(string url);
@@ -9,6 +9,5 @@ public interface ITCPConnection
     IObservable<byte[]> ComingData();
     void Send(string eventName, string msg);
 
-    void Connect_2(string url);
     void Bind(string eventName, SocketIOCallback callback);
 }

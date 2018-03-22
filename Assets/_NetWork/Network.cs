@@ -1,12 +1,13 @@
-﻿using UniRx;
+﻿using System;
+using UniRx;
 using UnityEngine;
 
 public class Network : INetwork, INetworkConnection
 {
-    Zenject.IFactory<ITCPConnection> connectionFactory = null;
-    ITCPConnection conn = null;
+    Zenject.IFactory<ISocketIOConnection> connectionFactory = null;
+    ISocketIOConnection conn = null;
 
-    public Network(Zenject.IFactory<ITCPConnection> factory)
+    public Network(Zenject.IFactory<ISocketIOConnection> factory)
     {
         connectionFactory = factory;
     }
@@ -15,23 +16,21 @@ public class Network : INetwork, INetworkConnection
     {
         if (conn != null)
         {
-            Debug.LogError("conn is not null");
-            return;
+            throw new InvalidOperationException();
         }
 
         conn = connectionFactory.Create();
         conn.ComingData().Subscribe(OnData, OnDataException);
 
-        //conn.Connect(url).Subscribe(_ =>
-        //{
-        //    Debug.Log("Conn Suc");
-        //}, error =>
-        //{
-        //    Debug.Log("Conn error" + error);
-        //    DisConnect();
-        //}
-        //);
-        conn.Connect_2(url);
+        conn.Connect(url).Subscribe(_ =>
+        {
+            Debug.Log("Conn Suc");
+        }, error =>
+        {
+            Debug.LogException(error);
+            DisConnect();
+        }
+        );
     }
 
     public void DisConnect()
@@ -45,12 +44,11 @@ public class Network : INetwork, INetworkConnection
 
     public void OnData(byte[] data)
     {
-        //
+        Debug.Log("OnData");
     }
 
     void OnDataException()
     {
-
         DisConnect();
     }
 

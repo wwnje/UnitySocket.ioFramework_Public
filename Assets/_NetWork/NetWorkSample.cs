@@ -8,23 +8,21 @@ using BestHTTP.Examples;
 
 public class NetWorkSample : MonoBehaviour
 {
-    Zenject.IFactory<ITCPConnection> connectionFactory;
-    Network network;
-
     const string url = "http://localhost:3000/socket.io/";
+
+    Zenject.IFactory<ISocketIOConnection> connectionFactory;
+    Network network;
 
     private string userName = string.Empty;
     private string chatLog = string.Empty;
 
     bool isLogin = false;
 
-    #region Unity Events
-
     private void Awake()
     {
         connectionFactory = new ConnectionFactory();
         network = new Network(connectionFactory);
-
+        network.Connect(url);
     }
 
     void Start()
@@ -32,9 +30,6 @@ public class NetWorkSample : MonoBehaviour
         GUIHelper.ClientArea =
             new Rect(0, SampleSelector.statisticsHeight + 5, Screen.width, Screen.height - SampleSelector.statisticsHeight - 50);
 
-        network.Connect(url);
-
-        // Set up custom chat events
         network.Bind("login", OnLogin);
         network.Bind("user joined", OnUserJoined);
     }
@@ -51,30 +46,26 @@ public class NetWorkSample : MonoBehaviour
 
             if (!isLogin)
             {
-
                 userName = GUILayout.TextField(userName);
-
                 if (GUILayout.Button("Join"))
+                {
                     SetUserName();
+                }
             }
 
             GUILayout.FlexibleSpace();
             GUILayout.EndVertical();
         });
     }
-
-    #endregion
-
-    #region Chat Logic
-
     void SetUserName()
     {
         if (string.IsNullOrEmpty(userName))
+        {
             return;
+        }
 
         network.Send("add user", userName);
     }
-
     void AddParticipantsMessage(Dictionary<string, object> data)
     {
         int numUsers = Convert.ToInt32(data["numUsers"]);
@@ -85,16 +76,10 @@ public class NetWorkSample : MonoBehaviour
             chatLog += "there are " + numUsers + " participants\n";
     }
 
-    #endregion
-
-    #region Custom SocketIO Events
-
     void OnLogin(Socket socket, Packet packet, params object[] args)
     {
         isLogin = true;
-
         chatLog = "Welcome to Socket.IO Chat — \n";
-
         AddParticipantsMessage(args[0] as Dictionary<string, object>);
     }
 
@@ -108,12 +93,10 @@ public class NetWorkSample : MonoBehaviour
 
         AddParticipantsMessage(data);
     }
-    #endregion
 
     void OnDestroy()
     {
         network.DisConnect();
     }
 }
-
 #endif

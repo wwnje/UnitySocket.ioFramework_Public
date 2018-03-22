@@ -1,7 +1,7 @@
-﻿public class ConnectionFactory : Zenject.IFactory<ITCPConnection>
+﻿public class ConnectionFactory : Zenject.IFactory<ISocketIOConnection>
 {
-    public ITCPConnection Create()
+    public ISocketIOConnection Create()
     {
-        return new TCPConnection();
+        return new SocketIOConnection();
     }
 }
