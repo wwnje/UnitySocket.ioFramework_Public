@@ -1,21 +1,34 @@
 ﻿using BestHTTP.SocketIO;
 using System;
+using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
 public class SocketIOConnection : ISocketIOConnection
 {
     SocketManager Manager;
-    Subject<byte[]> subject;
+    Subject<Dictionary<string, object>> subject = new Subject<Dictionary<string, object>>();
+    List<string> eventNameLst = new List<string>();
 
-    public IObservable<byte[]> ComingData()
+    public IObservable<Dictionary<string, object>> ComingData()
     {
-        return subject ?? new Subject<byte[]>();
+        return subject;
+    }
+
+    public void Close()
+    {
+        if (Manager == null) return;
+
+        Manager.Close();
+
+        subject.Dispose();
+
+        eventNameLst.Clear();
     }
 
     public bool IsConnected()
     {
-        return false;
+        return Manager != null ? (Manager.State == SocketManager.States.Open) : false;
     }
 
     public IObservable<Unit> Connect(string url)
@@ -68,14 +81,18 @@ public class SocketIOConnection : ISocketIOConnection
         Manager.Socket.Emit(eventName, msg);
     }
 
-    public void Bind(string eventName, BestHTTP.SocketIO.Events.SocketIOCallback callback)
+    public void Bind(string eventName)
     {
-        Manager.Socket.On(eventName, callback);
-    }
+        if (eventNameLst.Contains(eventName)) return;
 
-    public void Close()
-    {
-        Manager.Close();
+        eventNameLst.Add(eventName);
+
+        Manager.Socket.On(eventName,
+                    (socket, packet, args) =>
+                    {
+                        var data = args[0] as Dictionary<string, object>;
+                        subject.OnNext(data);
+                    });
     }
 
     IObservable<Unit> ConnectInvalid()

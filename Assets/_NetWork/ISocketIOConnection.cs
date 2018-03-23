@@ -1,4 +1,4 @@
-﻿using BestHTTP.SocketIO.Events;
+﻿using System.Collections.Generic;
 using UniRx;
 
 public interface ISocketIOConnection
@@ -6,8 +6,8 @@ public interface ISocketIOConnection
     bool IsConnected();
     IObservable<Unit> Connect(string url);
     void Close();
-    IObservable<byte[]> ComingData();
+    IObservable<Dictionary<string, object>> ComingData();
     void Send(string eventName, string msg);
 
-    void Bind(string eventName, SocketIOCallback callback);
+    void Bind(string eventName);
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class Network : INetwork, INetworkConnection
 {
     Zenject.IFactory<ISocketIOConnection> connectionFactory = null;
     ISocketIOConnection conn = null;
+    Subject<Dictionary<string, object>> subject = new Subject<Dictionary<string, object>>();
 
     public Network(Zenject.IFactory<ISocketIOConnection> factory)
     {
@@ -24,7 +26,7 @@ public class Network : INetwork, INetworkConnection
 
         conn.Connect(url).Subscribe(_ =>
         {
-            Debug.Log("Conn Suc");
+            Debug.Log("Connect Success.");
         }, error =>
         {
             Debug.LogException(error);
@@ -42,9 +44,14 @@ public class Network : INetwork, INetworkConnection
         }
     }
 
-    public void OnData(byte[] data)
+    public IObservable<Dictionary<string, object>> Receive()
     {
-        Debug.Log("OnData");
+        return subject;
+    }
+
+    public void OnData(Dictionary<string, object> data)
+    {
+        subject.OnNext(data);
     }
 
     void OnDataException()
@@ -52,23 +59,13 @@ public class Network : INetwork, INetworkConnection
         DisConnect();
     }
 
-    public IObservable<T> Receive<T>() where T : class
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public byte[] Receive()
-    {
-        return null;
-    }
-
     public void Send(string eventName, string msg)
     {
         conn.Send(eventName, msg);
     }
 
-    public void Bind(string eventName, BestHTTP.SocketIO.Events.SocketIOCallback callback)
+    public void Bind(string eventName)
     {
-        conn.Bind(eventName, callback);
+        conn.Bind(eventName);
     }
 }

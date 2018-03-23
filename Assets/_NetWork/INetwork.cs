@@ -1,7 +1,7 @@
-﻿using UniRx;
+﻿using System.Collections.Generic;
+using UniRx;
 public interface INetwork
 {
-    IObservable<T> Receive<T>() where T : class;
-    byte[] Receive();
+    IObservable<Dictionary<string, object>> Receive();
     void Send(string eventName, string msg);
 }

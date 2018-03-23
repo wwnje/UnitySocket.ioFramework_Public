@@ -3,26 +3,21 @@ using System;
 using System.Collections.Generic;
 
 using UnityEngine;
-using BestHTTP.SocketIO;
 using BestHTTP.Examples;
 
 public class NetWorkSample : MonoBehaviour
 {
-    const string url = "http://localhost:3000/socket.io/";
-
-    Zenject.IFactory<ISocketIOConnection> connectionFactory;
-    Network network;
-
     private string userName = string.Empty;
     private string chatLog = string.Empty;
 
     bool isLogin = false;
 
+    NetMgr _netMgr;
+
     private void Awake()
     {
-        connectionFactory = new ConnectionFactory();
-        network = new Network(connectionFactory);
-        network.Connect(url);
+        _netMgr = NetMgr.Ins;
+        _netMgr.Connect();
     }
 
     void Start()
@@ -30,8 +25,9 @@ public class NetWorkSample : MonoBehaviour
         GUIHelper.ClientArea =
             new Rect(0, SampleSelector.statisticsHeight + 5, Screen.width, Screen.height - SampleSelector.statisticsHeight - 50);
 
-        network.Bind("login", OnLogin);
-        network.Bind("user joined", OnUserJoined);
+        _netMgr.AddHandler("OnMessaged", OnMessaged);
+        _netMgr.AddHandler("OnLogin", OnLogin, "login");
+        _netMgr.AddHandler("OnUserJoined", OnUserJoined, "user joined");
     }
 
     void OnGUI()
@@ -57,6 +53,7 @@ public class NetWorkSample : MonoBehaviour
             GUILayout.EndVertical();
         });
     }
+
     void SetUserName()
     {
         if (string.IsNullOrEmpty(userName))
@@ -64,39 +61,25 @@ public class NetWorkSample : MonoBehaviour
             return;
         }
 
-        network.Send("add user", userName);
-    }
-    void AddParticipantsMessage(Dictionary<string, object> data)
-    {
-        int numUsers = Convert.ToInt32(data["numUsers"]);
-
-        if (numUsers == 1)
-            chatLog += "there's 1 participant\n";
-        else
-            chatLog += "there are " + numUsers + " participants\n";
+        _netMgr.Send(userName, "add user");
     }
 
-    void OnLogin(Socket socket, Packet packet, params object[] args)
+    void OnLogin(object data)
     {
         isLogin = true;
         chatLog = "Welcome to Socket.IO Chat — \n";
-        AddParticipantsMessage(args[0] as Dictionary<string, object>);
+        Debug.Log(data);
     }
 
-    void OnUserJoined(Socket socket, Packet packet, params object[] args)
+    void OnUserJoined(object data)
     {
-        var data = args[0] as Dictionary<string, object>;
-
-        var username = data["username"] as string;
-
-        chatLog += string.Format("{0} joined\n", username);
-
-        AddParticipantsMessage(data);
+        Debug.Log(data);
+        chatLog += string.Format("{0} joined\n", data);
     }
 
-    void OnDestroy()
+    void OnMessaged(object data)
     {
-        network.DisConnect();
+        Debug.Log("message:" + data);
     }
 }
 #endif
