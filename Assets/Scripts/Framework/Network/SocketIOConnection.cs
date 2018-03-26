@@ -7,10 +7,10 @@ using UnityEngine;
 public class SocketIOConnection : ISocketIOConnection
 {
     SocketManager Manager;
-    Subject<Dictionary<string, object>> subject = new Subject<Dictionary<string, object>>();
+    Subject<object> subject = new Subject<object>();
     List<string> eventNameLst = new List<string>();
 
-    public IObservable<Dictionary<string, object>> ComingData()
+    public IObservable<object> ComingData()
     {
         return subject;
     }
@@ -79,8 +79,12 @@ public class SocketIOConnection : ISocketIOConnection
         Manager.Socket.On(eventName,
                     (socket, packet, args) =>
                     {
-                        var data = args[0] as Dictionary<string, object>;
-                        subject.OnNext(data);
+                        var dic = args[0] as Dictionary<string, object>;
+                        ReceiveMessage msg = new ReceiveMessage
+                        {
+                            data = dic,
+                        };
+                        subject.OnNext(msg);
                     });
     }
 

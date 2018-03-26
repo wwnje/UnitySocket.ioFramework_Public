@@ -1,7 +1,13 @@
-﻿using System.Collections.Generic;
-using UniRx;
+﻿using UniRx;
+
 public interface INetwork
 {
-    IObservable<Dictionary<string, object>> Receive();
-    void Send(string eventName, string msg);
+    IObservable<T> Receive<T>() where T : class;
+    void Send<T>(T pack) where T: GameMessage;
+}
+
+public class GameMessage
+{
+    public string socketEventName;
+    public string msg;
 }

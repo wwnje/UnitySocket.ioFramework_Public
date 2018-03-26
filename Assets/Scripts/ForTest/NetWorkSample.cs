@@ -2,6 +2,11 @@
 using UnityEngine;
 using BestHTTP.Examples;
 
+public class MsgLoginReturn : GameMessage
+{
+    public string str;
+}
+
 public class NetWorkSample : MonoBehaviour
 {
     private string userName = string.Empty;
@@ -9,11 +14,11 @@ public class NetWorkSample : MonoBehaviour
 
     bool isLogin = false;
 
-    NetMgr _netMgr;
+    NetIns _netMgr;
 
     private void Awake()
     {
-        _netMgr = NetMgr.Ins;
+        _netMgr = NetIns.Ins;
         _netMgr.Connect();
     }
 
@@ -22,9 +27,9 @@ public class NetWorkSample : MonoBehaviour
         GUIHelper.ClientArea =
             new Rect(0, SampleSelector.statisticsHeight + 5, Screen.width, Screen.height - SampleSelector.statisticsHeight - 50);
 
-        _netMgr.AddHandler("OnMessaged", OnMessaged);
-        _netMgr.AddHandler("OnLogin", OnLogin, "login");
-        _netMgr.AddHandler("OnUserJoined", OnUserJoined, "user joined");
+        //_netMgr.AddHandler(MsgLoginReturn, OnMessaged);
+        _netMgr.AddHandler<MsgLoginReturn>(OnLogin, "login");
+        //_netMgr.AddHandler("OnUserJoined", OnUserJoined, "user joined");
     }
 
     void OnGUI()
@@ -61,11 +66,11 @@ public class NetWorkSample : MonoBehaviour
         _netMgr.Send(userName, "add user");
     }
 
-    void OnLogin(object data)
+    void OnLogin(MsgLoginReturn data)
     {
         isLogin = true;
         chatLog = "Welcome to Socket.IO Chat — \n";
-        Debug.Log(data);
+        Debug.Log("Login Return:" + data.str);
     }
 
     void OnUserJoined(object data)

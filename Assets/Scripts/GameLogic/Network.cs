@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
@@ -7,7 +6,7 @@ public class Network : INetwork, INetworkConnection
 {
     Zenject.IFactory<ISocketIOConnection> connectionFactory = null;
     ISocketIOConnection conn = null;
-    Subject<Dictionary<string, object>> subject = new Subject<Dictionary<string, object>>();
+    IMessageDispatcher dispatcher = null;
 
     public Network(Zenject.IFactory<ISocketIOConnection> factory)
     {
@@ -20,6 +19,8 @@ public class Network : INetwork, INetworkConnection
         {
             throw new InvalidOperationException();
         }
+
+        dispatcher = new MessageDispatcher();
 
         conn = connectionFactory.Create();
         conn.ComingData().Subscribe(OnData, OnDataException);
@@ -44,14 +45,9 @@ public class Network : INetwork, INetworkConnection
         }
     }
 
-    public IObservable<Dictionary<string, object>> Receive()
+    public void OnData(object data)
     {
-        return subject;
-    }
-
-    public void OnData(Dictionary<string, object> data)
-    {
-        subject.OnNext(data);
+        dispatcher.Public(data as ReceiveMessage, typeof(ReceiveMessage));
     }
 
     void OnDataException()
@@ -59,9 +55,14 @@ public class Network : INetwork, INetworkConnection
         DisConnect();
     }
 
-    public void Send(string eventName, string msg)
+    public IObservable<T> Receive<T>() where T : class
     {
-        conn.Send(eventName, msg);
+        return dispatcher.Receive<T>();
+    }
+
+    public void Send<T>(T pack) where T : GameMessage
+    {
+        conn.Send(pack.socketEventName, pack.msg);
     }
 
     public void Bind(string eventName)
