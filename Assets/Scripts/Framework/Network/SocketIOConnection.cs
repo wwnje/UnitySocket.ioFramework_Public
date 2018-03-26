@@ -35,7 +35,7 @@ public class SocketIOConnection : ISocketIOConnection
     {
         if (Manager != null)
         {
-            ConnectInvalid();
+            return ConnectInvalid();
         }
 
         return Observable.Create<Unit>(observer =>
@@ -59,17 +59,6 @@ public class SocketIOConnection : ISocketIOConnection
                     {
                         observer.OnNext(Unit.Default);
                     });
-
-                Manager.GetSocket("/nsp").On(SocketIOEventTypes.Connect, (socket, packet, arg) =>
-                {
-                    Debug.LogWarning("Connected to /nsp");
-                    socket.Emit("testmsg", "Message from /nsp 'on connect'");
-                });
-
-                Manager.GetSocket("/nsp").On("nsp_message", (socket, packet, arg) =>
-                {
-                    Debug.LogWarning("nsp_message: " + arg[0]);
-                });
 
                 Manager.Open();
                 return Disposable.Empty;
