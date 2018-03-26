@@ -6,6 +6,14 @@ using Zenject;
 [TestFixture]
 public class GetServerLstTest : ZenjectUnitTestFixture
 {
+    public class MockLoadServerInfoFactory : Zenject.IFactory<ILoadServerInfo>
+    {
+        public ILoadServerInfo Create()
+        {
+            return new MockLoadServerInfoLocal();
+        }
+    }
+
     public class MockLoadServerInfoLocal : ILoadServerInfo
     {
         public ServerInfo GetServerInfo()
@@ -21,13 +29,28 @@ public class GetServerLstTest : ZenjectUnitTestFixture
         }
     }
 
+    public class MockLoadServerInfoOnLine : ILoadServerInfo
+    {
+        public ServerInfo GetServerInfo()
+        {
+            string filePath = Application.streamingAssetsPath + "/server_list.json";
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                string dataAsJson = File.ReadAllText(filePath);
+                return JsonUtility.FromJson<ServerInfo>(dataAsJson);
+            }
+
+            return null;
+        }
+    }
+
     [Inject]
-    ILoadServerInfo loadServerInfo = null;
+    Zenject.IFactory<ILoadServerInfo> factory = null;
 
     [SetUp]
     public void CommonInstall()
     {
-        Container.Bind<ILoadServerInfo>().To<MockLoadServerInfoLocal>().AsSingle();
+        Container.Bind<Zenject.IFactory<ILoadServerInfo>>().To<MockLoadServerInfoFactory>().AsSingle();
         Container.Inject(this);
     }
 
@@ -37,7 +60,8 @@ public class GetServerLstTest : ZenjectUnitTestFixture
     public void Run_Test()
     {
         //Login 前获得服务列表
-        ServerInfo info = loadServerInfo.GetServerInfo();
+        Login login = new Login(factory);
+        ServerInfo info = login.LoadServerInfo();
         Assert.IsNotNull(info);
         Assert.AreEqual(info.vision, VERSION_NOW);
     }

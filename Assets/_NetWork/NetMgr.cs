@@ -16,6 +16,7 @@ public class NetMgr
             return _ins;
         }
     }
+
     public class EventSlot
     {
         public string _onName = "";
