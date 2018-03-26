@@ -1,7 +1,4 @@
 ﻿#if !BESTHTTP_DISABLE_SOCKETIO
-using System;
-using System.Collections.Generic;
-
 using UnityEngine;
 using BestHTTP.Examples;
 
