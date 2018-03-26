@@ -16,6 +16,7 @@ public class NetWorkSample : MonoBehaviour
 
     NetIns _netMgr;
 
+
     private void Awake()
     {
         _netMgr = NetIns.Ins;
