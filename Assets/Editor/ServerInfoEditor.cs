@@ -58,7 +58,6 @@ public class ServerInfoEditor : EditorWindow
         if (!string.IsNullOrEmpty(filePath))
         {
             string dataAsJson = File.ReadAllText(filePath);
-
             serverInfo = JsonUtility.FromJson<ServerInfo>(dataAsJson);
         }
     }
