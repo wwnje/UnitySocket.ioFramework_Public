@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/ChatRoomSocketIO.unity
     guid: 83ccc91f0634c6640985daffc3e60de8
-  - enabled: 1
-    path: Assets/NetWork.unity
+  - enabled: 0
+    path: Assets/Scene/NetWork_Login.unity
     guid: 42b797acc3cb1b34db44eb929b7b3f75
+  - enabled: 1
+    path: Assets/Scene/Login.unity
+    guid: ad9cd002ca83dec48bdd62beb6128019
