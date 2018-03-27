@@ -68,7 +68,7 @@ public class NetWorkSample : MonoBehaviour
     void OnLogin(MsgLoginReturn data)
     {
         isLogin = true;
-        chatLog = "Welcome to Socket.IO Chat — \n";
+        chatLog = "Welcome to Socket.IO Chat — \n" + data.str;
         Debug.Log("Login Return:" + data.str);
     }
 
