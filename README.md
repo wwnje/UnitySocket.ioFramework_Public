@@ -1,10 +1,15 @@
-# Socket.IO-For-Unity
+# Socket.IO Framework
 
-Socket.io for Unity
+a socket.io framework
+
+* loadServerinfo
+* socket.io connection
+
+
 
 thanks 
 
-socket.io
-BestHTTP
-Zenject
-UniRx
+socket.io  
+BestHTTP  
+Zenject  
+UniRx  
