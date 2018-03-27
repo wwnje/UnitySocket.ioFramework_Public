@@ -28,7 +28,7 @@ public class UniRxLearn : MonoBehaviour
         //BoolReactiveProperty
         _bool.Subscribe(_ =>
         {
-            Debug.Log("IsBool:" + _); ;
+            Debug.Log("IsBool:" + _);
         })
         .AddTo(this);
         _bool.Value = false;
