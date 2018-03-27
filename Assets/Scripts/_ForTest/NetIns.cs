@@ -42,7 +42,7 @@ public class NetIns
 
     Network _network = null;
 
-    const string LOCAL_URL = "http://localhost:3000/socket.io/";
+    const string LOCAL_URL = "http://192.168.235.97:3000/socket.io/";
 
 
     public void Connect()

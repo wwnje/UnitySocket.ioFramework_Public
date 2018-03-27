@@ -28,9 +28,7 @@ public class NetWorkSample : MonoBehaviour
         GUIHelper.ClientArea =
             new Rect(0, SampleSelector.statisticsHeight + 5, Screen.width, Screen.height - SampleSelector.statisticsHeight - 50);
 
-        //_netMgr.AddHandler(MsgLoginReturn, OnMessaged);
         _netMgr.AddHandler<MsgLoginReturn>(OnLogin, "login");
-        //_netMgr.AddHandler("OnUserJoined", OnUserJoined, "user joined");
     }
 
     void OnGUI()
