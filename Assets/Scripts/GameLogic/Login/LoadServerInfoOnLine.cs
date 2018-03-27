@@ -25,11 +25,7 @@ namespace Game.Login.Internal
             {
                 yield return www.SendWebRequest();
 
-                if (www.isNetworkError)
-                {
-                    Debug.Log(www.error);
-                }
-                else
+                if (www.isDone && string.IsNullOrEmpty(www.error))
                 {
                     ServerInfo serverInfo = JsonUtility.FromJson<ServerInfo>(www.downloadHandler.text);
                     observer.OnNext(serverInfo);

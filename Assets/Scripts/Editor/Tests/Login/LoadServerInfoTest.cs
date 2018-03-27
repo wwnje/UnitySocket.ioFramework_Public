@@ -10,17 +10,13 @@ public class LoadServerInfoTest : ZenjectUnitTestFixture
 {
     ServerInfoSetting setting = new ServerInfoSetting();
 
-    [Inject(Id = 1)]
-    IServerInfoLoader loader_local = null;
-
-    [Inject(Id = 2)]
+    [Inject]
     IServerInfoLoader loader_online = null;
 
     [SetUp]
     public void CommonInstall()
     {
-        Container.Bind<IServerInfoLoader>().WithId(1).To<ServerInfoLocalLoader>().AsSingle();
-        Container.Bind<IServerInfoLoader>().WithId(2).To<ServerInfoOnLineLoader>().AsSingle();
+        Container.Bind<IServerInfoLoader>().To<ServerInfoOnLineLoader>().AsSingle();
         Container.BindInstance(setting);
         Container.Inject(this);
     }
@@ -28,16 +24,9 @@ public class LoadServerInfoTest : ZenjectUnitTestFixture
     const int VERSION_NOW = 1;
 
     [Test]
-    public void Run_Test_Local()
+    public void TestSample()
     {
-        loader_local.Load()
-        .Subscribe(info =>
-        {
-            Debug.Log(info.announcement);
-
-            Assert.IsNotNull(info);
-            Assert.AreEqual(info.vision, VERSION_NOW);
-        });
+        Debug.Log("TestSample");
     }
 
     [Test]
