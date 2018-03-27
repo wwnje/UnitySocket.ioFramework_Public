@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.IO;
-using Game.Network.Login;
+using Game.Login;
 
 public class ServerInfoEditor : EditorWindow
 {
@@ -16,7 +16,7 @@ public class ServerInfoEditor : EditorWindow
     [MenuItem("Window/ServerInfoEditor")]
     static void Init()
     {
-        EditorWindow.GetWindowWithRect(typeof(ServerInfoEditor), new Rect(0,0,550, 700)).Show();
+        EditorWindow.GetWindowWithRect(typeof(ServerInfoEditor), new Rect(0,0,510, 600)).Show();
     }
 
     private void OnGUI()

@@ -1,12 +1,15 @@
 ﻿using NUnit.Framework;
 using Zenject;
 using UniRx;
-using Game.Network.Login;
+using Game.Login;
 using UnityEngine;
+using Game.Login.Internal;
 
 [TestFixture]
 public class LoadServerInfoTest : ZenjectUnitTestFixture
 {
+    ServerInfoSetting setting = new ServerInfoSetting();
+
     [Inject(Id = 1)]
     IServerInfoLoader loader_local = null;
 
@@ -18,6 +21,7 @@ public class LoadServerInfoTest : ZenjectUnitTestFixture
     {
         Container.Bind<IServerInfoLoader>().WithId(1).To<ServerInfoLocalLoader>().AsSingle();
         Container.Bind<IServerInfoLoader>().WithId(2).To<ServerInfoOnLineLoader>().AsSingle();
+        Container.BindInstance(setting);
         Container.Inject(this);
     }
 

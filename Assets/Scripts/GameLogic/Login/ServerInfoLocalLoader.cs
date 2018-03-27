@@ -2,17 +2,25 @@
 using UniRx;
 using UnityEngine;
 
-namespace Game.Network.Login
+namespace Game.Login.Internal
 {
     public class ServerInfoLocalLoader : IServerInfoLoader
     {
+        ServerInfoSetting _setting = null;
+
+        public ServerInfoLocalLoader(ServerInfoSetting setting)
+        {
+            _setting = setting;
+        }
+
         public IObservable<ServerInfo> Load()
         {
             return Observable.Create<ServerInfo>(observer =>
             {
-                if (!string.IsNullOrEmpty(ServerInfoSetting.localUrl))
+                string url = Application.streamingAssetsPath + _setting.LocalUrl;
+                if (!string.IsNullOrEmpty(url))
                 {
-                    string dataAsJson = File.ReadAllText(ServerInfoSetting.localUrl);
+                    string dataAsJson = File.ReadAllText(url);
                     ServerInfo serverInfo = JsonUtility.FromJson<ServerInfo>(dataAsJson);
                     observer.OnNext(serverInfo);
                 }

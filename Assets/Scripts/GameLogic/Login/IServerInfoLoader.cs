@@ -1,5 +1,6 @@
 ﻿using UniRx;
-namespace Game.Network.Login
+
+namespace Game.Login.Internal
 {
     public interface IServerInfoLoader
     {

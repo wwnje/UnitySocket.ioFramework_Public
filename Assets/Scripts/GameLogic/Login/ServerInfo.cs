@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Game.Network.Login
+namespace Game.Login
 {
     [Serializable]
     public class ServerInfo
