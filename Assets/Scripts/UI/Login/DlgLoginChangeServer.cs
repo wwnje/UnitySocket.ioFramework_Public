@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
 
 public class DlgLoginChangeServer : MonoBehaviour
 {
@@ -22,6 +23,11 @@ public class DlgLoginChangeServer : MonoBehaviour
 
     public void OnOpen()
     {
+        Refresh();
+    }
+
+    void Refresh()
+    {
         // refresh
         foreach (Transform child in chooseItemParent)
         {
@@ -42,13 +48,18 @@ public class DlgLoginChangeServer : MonoBehaviour
 
             item.transform.parent = chooseItemParent;
             item.GetComponentInChildren<Text>().text = i + "";
+
+            // addOnclick
+            item.GetComponent<DlgLoginChange_ServerChooseItem>().Bind(i)
+                .Subscribe(_ => OnClick(_))
+                .AddTo(this);
+
             item.SetActive(true);
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnClick(int i)
     {
-
+        Debug.LogError(i);
     }
 }
