@@ -10,23 +10,32 @@ public class DlgLoginChangeServer : MonoBehaviour
     public GameObject ChooseItem;
     public GameObject DetailItem;
 
+    public Button Button_Close;
+
     Transform chooseItemParent;
     Transform detalItemParent;
 
-    void Start()
+    void Awake()
     {
+        Button_Close.OnClickAsObservable().Subscribe(_ => OnClose());
+
         chooseItemParent = PnlChooseList.content;
         detalItemParent = PnlDetailList.content;
 
+        Test();
+    }
+
+    void Test()
+    {
         OnOpen();
     }
 
     public void OnOpen()
     {
-        Refresh();
+        RefreshChooseLst();
     }
 
-    void Refresh()
+    void RefreshChooseLst()
     {
         // refresh
         foreach (Transform child in chooseItemParent)
@@ -36,23 +45,24 @@ public class DlgLoginChangeServer : MonoBehaviour
 
         for (int i = 0; i < 3; i++)
         {
+            int index = i;
             GameObject item = null;
-            if (i > chooseItemParent.childCount - 1)
+
+            if (index > chooseItemParent.childCount - 1)
             {
                 item = Instantiate(ChooseItem);
             }
             else
             {
-                item = chooseItemParent.GetChild(i).gameObject;
+                item = chooseItemParent.GetChild(index).gameObject;
             }
 
             item.transform.parent = chooseItemParent;
-            item.GetComponentInChildren<Text>().text = i + "";
+            item.GetComponentInChildren<Text>().text = index + "";
 
             // addOnclick
-            item.GetComponent<DlgLoginChange_ServerChooseItem>().Bind(i)
-                .Subscribe(_ => OnClick(_))
-                .AddTo(this);
+            item.GetComponent<Button>().OnClickAsObservable()
+                .Subscribe(_ => OnClick(index));
 
             item.SetActive(true);
         }
@@ -60,6 +70,39 @@ public class DlgLoginChangeServer : MonoBehaviour
 
     void OnClick(int i)
     {
-        Debug.LogError(i);
+        // change detail
+        ChangeDetail(i);
+    }
+
+    void ChangeDetail(int index)
+    {
+        // refresh
+        foreach (Transform child in detalItemParent)
+        {
+            child.gameObject.SetActive(false);
+        }
+
+        for (int i = 0; i < index + 1; i++)
+        {
+            GameObject item = null;
+
+            if (i > detalItemParent.childCount - 1)
+            {
+                item = Instantiate(DetailItem);
+            }
+            else
+            {
+                item = detalItemParent.GetChild(i).gameObject;
+            }
+
+            item.transform.parent = detalItemParent;
+            item.GetComponentInChildren<Text>().text = i + "";
+            item.SetActive(true);
+        }
+    }
+
+    void OnClose()
+    {
+        gameObject.SetActive(false);
     }
 }

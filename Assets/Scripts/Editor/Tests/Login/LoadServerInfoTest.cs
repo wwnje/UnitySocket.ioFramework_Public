@@ -4,6 +4,7 @@ using UniRx;
 using Game.Login;
 using UnityEngine;
 using Game.Login.Internal;
+using System.Threading;
 
 [TestFixture]
 public class LoadServerInfoTest : ZenjectUnitTestFixture
@@ -39,6 +40,10 @@ public class LoadServerInfoTest : ZenjectUnitTestFixture
 
             Assert.IsNotNull(info);
             Assert.AreEqual(info.vision, VERSION_NOW);
-        });
+        }, error =>
+        {
+            Debug.LogException(error);
+        }
+        );
     }
 }

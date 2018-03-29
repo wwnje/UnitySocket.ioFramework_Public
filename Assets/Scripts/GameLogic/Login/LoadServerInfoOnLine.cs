@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -29,6 +30,10 @@ namespace Game.Login.Internal
                 {
                     ServerInfo serverInfo = JsonUtility.FromJson<ServerInfo>(www.downloadHandler.text);
                     observer.OnNext(serverInfo);
+                }
+                else
+                {
+                    observer.OnError(new InvalidOperationException());
                 }
             }
         }
