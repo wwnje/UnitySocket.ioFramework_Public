@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UniRx;
 using UnityEngine.UI;
-using Zenject;
 
 public class DlgLogin : MonoBehaviour
 {
@@ -12,32 +11,43 @@ public class DlgLogin : MonoBehaviour
     LoginOpenSettingSignal OpenSettingSignal = new LoginOpenSettingSignal();
 
     // Use this for initialization
-    void Start()
+    void Awake()
+    {
+        Test();
+
+        ButtonStartGame.OnClickAsObservable().Subscribe(_ => OnClickStartGame());
+        ButtonSetting.OnClickAsObservable().Subscribe(_ => OnClickSetting());
+    }
+
+    void Test()
     {
         StartGameSignal.Subscribe(_ =>
         {
-            TestAllIns.Ins.DlgLoginLoading.SetActive(true);
-            this.gameObject.SetActive(false);
-        }
-        );
+            TestAllIns.Ins.DlgLoginLoading.OnOpenStartLoading();
+        });
 
         OpenSettingSignal.Subscribe(_ =>
         {
-            TestAllIns.Ins.DlgLoginSetting.SetActive(true);
-            this.gameObject.SetActive(false);
-        }
-        );
+            TestAllIns.Ins.DlgLoginSetting.gameObject.SetActive(true);
+        });
+    }
 
-        ButtonStartGame.OnClickAsObservable()
-            .Subscribe(_ =>
-            {
-                StartGameSignal.Fire();
-            });
+    void OnClickStartGame()
+    {
+        //Check
+        //无人物账号或已有账号登录后
+        Debug.Log("人物登录");
+        StartGameSignal.Fire();
+    }
 
-        ButtonSetting.OnClickAsObservable()
-            .Subscribe(_ =>
-            {
-                OpenSettingSignal.Fire();
-            });
+    void OnClickSetting()
+    {
+        OpenSettingSignal.Fire();
+    }
+
+    void OnClose()
+    {
+        // when enter mainScene
+        gameObject.SetActive(false);
     }
 }

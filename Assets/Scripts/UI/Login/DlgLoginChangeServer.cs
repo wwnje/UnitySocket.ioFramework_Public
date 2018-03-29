@@ -21,17 +21,11 @@ public class DlgLoginChangeServer : MonoBehaviour
 
         chooseItemParent = PnlChooseList.content;
         detalItemParent = PnlDetailList.content;
-
-        Test();
-    }
-
-    void Test()
-    {
-        OnOpen();
     }
 
     public void OnOpen()
     {
+        gameObject.SetActive(true);
         RefreshChooseLst();
     }
 
